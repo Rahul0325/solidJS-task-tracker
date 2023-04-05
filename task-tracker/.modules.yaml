@@ -1,0 +1,23 @@
+hoistPattern:
+  - '*'
+hoistedDependencies:
+  /@popperjs/core/2.11.7:
+    '@popperjs/core': private
+included:
+  dependencies: true
+  devDependencies: true
+  optionalDependencies: true
+injectedDeps: {}
+layoutVersion: 5
+nodeLinker: isolated
+packageManager: pnpm@8.1.0
+pendingBuilds: []
+prunedAt: Wed, 05 Apr 2023 08:28:36 GMT
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
+registries:
+  default: https://registry.npmjs.org/
+skipped: []
+storeDir: C:\Users\KALA432137\AppData\Local\pnpm\store\v3
+virtualStoreDir: C:\Dev\Projects\personal_projects\solidjs_task_tracker\solidJS-task-tracker\node_modules\.pnpm
