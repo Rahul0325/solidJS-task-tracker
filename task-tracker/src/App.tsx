@@ -1,4 +1,5 @@
 import { Component, createSignal, For } from "solid-js";
+import { createStore } from "solid-js/store";
 
 const App: Component = () => {
   type Task = {
@@ -7,7 +8,7 @@ const App: Component = () => {
     completed: boolean;
   };
 
-  const [taskList, setTaskList] = createSignal([] as Task[]);
+  const [taskList, setTaskList] = createStore([] as Task[]);
 
   const addTask = (e: Event) => {
     console.log("adding new task: ");
@@ -21,14 +22,45 @@ const App: Component = () => {
       completed: false,
     };
 
-    setTaskList([newTask, ...taskList()]);
+    setTaskList([newTask, ...taskList]);
     taskInput.value = "";
-    console.log(taskList());
+    console.log(taskList);
   };
 
   const deleteTask = (taskId: string) => {
-    const newTaskList = taskList().filter((task) => task.id !== taskId);
+    const newTaskList = taskList.filter((task) => task.id !== taskId);
     setTaskList(newTaskList);
+  };
+
+  // BUG WHY DOES THIS NOT WORK and the other method works?!?!?
+  // const toggleStatus = (taskId: string) => {
+  //   const newTaskList: Task[] = taskList().map((task: Task) => {
+  //     if (task.id === taskId) {
+  //       task.completed = !task.completed;
+  //       return task;
+  //     }
+  //     return task;
+  //   });
+  //   setTaskList(newTaskList);
+  //   console.log(taskList());
+  // };
+
+  // const toggleStatus = (taskId: string) => {
+  //   const newTaskList = taskList.map((task) => {
+  //     if (task.id === taskId) {
+  //       return { ...task, completed: !task.completed };
+  //     }
+  //     return task;
+  //   });
+  //   setTaskList(newTaskList);
+  // };
+
+  const toggleStatus = (taskId: string) => {
+    setTaskList(
+      (task) => task.id === taskId,
+      "completed",
+      (completed) => !completed
+    );
   };
 
   return (
@@ -59,7 +91,7 @@ const App: Component = () => {
 
       {/* Render the list of tasks */}
       <div>
-        <For each={taskList()}>
+        <For each={taskList}>
           {(task: Task) => (
             <div class="row row-cols-3 mb-3 justify-content-center">
               <button
@@ -68,12 +100,19 @@ const App: Component = () => {
               >
                 X
               </button>
-              <div class="bg-light p-2 mx-2">{task.text}</div>
+              <div
+                class={`bg-light p-2 mx-2 ${
+                  task.completed && `text-decoration-line-through text-success`
+                }`}
+              >
+                {task.text}
+              </div>
               <input
                 type="checkbox"
                 checked={task.completed}
                 role="button"
                 class="form-check-input h-auto px-3"
+                onClick={() => toggleStatus(task.id)}
               />
             </div>
           )}
